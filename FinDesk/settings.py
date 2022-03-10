@@ -11,9 +11,30 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import django.dispatch
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# Plugin Architecture signals
+plugin_loaded = django.dispatch.Signal()
+plugin_unloaded = django.dispatch.Signal()
+
+
+# plugin addition
+def load_plugin(name):
+    if not name in INSTALLED_APPS:
+        INSTALLED_APPS.append(PLUGIN_DIRECTORY + "." + name)
+        plugin_loaded.send(sender=name)
+    return INSTALLED_APPS
+
+
+def unload_plugin(name):
+    if name in INSTALLED_APPS:
+        INSTALLED_APPS.remove(name)
+        plugin_unloaded.send(sender=name.split(".")[1].strip())
+    return INSTALLED_APPS
 
 
 # Quick-start development settings - unsuitable for production
@@ -27,7 +48,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,7 +58,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
-    'django_ledger',
+    'ledger',
+    'FinDesk.utils.Plugin'
 
 ]
 
@@ -73,7 +94,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'FinDesk.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -83,7 +103,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -103,7 +122,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -114,7 +132,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -129,3 +146,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/auth/login/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+PLUGIN_DIRECTORY = 'uploaded_plugins'

@@ -14,9 +14,41 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.dispatch import receiver
 from django.urls import path, include
+from FinDesk.utils.Plugin.views import *
+from FinDesk.utils.Plugin.utils import *
+from django.conf import settings
+
+from FinDesk.settings import plugin_loaded, plugin_unloaded
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('django_ledger.urls', namespace='django_ledger')),
+    path('', include('ledger.urls', namespace='ledger')),
+    path('upload', upload),
+    path('all/', allPlugins),
+    path('plugin/<int:id>', toggleEnable, name='toggle'),
 ]
+
+
+@receiver(plugin_loaded)
+def load_urls(sender, **kwargs):
+    try:
+        urlpatterns.append(
+            path(str(sender).lower() + "/", include(settings.PLUGIN_DIRECTORY + "." + str(sender) + ".urls"),
+                 name=sender))
+    except:
+        pass
+
+
+@receiver(plugin_unloaded)
+def unload_urls(sender, **kwargs):
+    for url in urlpatterns:
+        print(f"{str(url.pattern)} : {(str(sender).lower() + '/')}")
+        if str(url.pattern).strip() == (str(sender).lower() + "/"):
+            urlpatterns.remove(url)
+
+try:
+    mountPlugins()
+except:
+    pass
