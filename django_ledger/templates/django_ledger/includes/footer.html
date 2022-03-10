@@ -1,0 +1,8 @@
+<footer class="footer">
+    <div class="content has-text-centered">
+        
+        {% if user.is_superuser %}
+            <a href="/admin">Admin</a>
+        {% endif %}
+    </div>
+</footer>
