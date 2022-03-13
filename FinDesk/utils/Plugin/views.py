@@ -1,3 +1,4 @@
+import json
 import os
 
 from django.shortcuts import render, redirect
@@ -23,14 +24,17 @@ def upload(request):
                 plugin = form.save()
                 with zipfile.ZipFile(plugin.file, 'r') as zip_ref:
                     filenames = zip_ref.namelist()
-                    plugin.filename = filenames[0]
-                    plugin.save()
                     zip_ref.extractall(f'{settings.PLUGIN_DIRECTORY}/')
-                    # if checkForTemplates(filenames):
-                    #     loadTemplates(plugin)
-                    print(load_plugin(plugin.filename.replace("/", "")))
-                    # os.system("python manage.py makemigrations")
-                    # os.system("python manage.py migrate")
+                    plugin.filename = filenames[0]
+                    config = json.load(open(f'{settings.PLUGIN_DIRECTORY}/{plugin.filename}config.json', 'r'))
+                    plugin.name = config['name']
+                    plugin.author = config['author']
+                    plugin.version = config['version']
+                    plugin.entry = config['entry']
+                    plugin.save()
+                    installPythonDeps(config)
+                    load_plugin(plugin.filename.replace("/", ""))
+
     form = PluginForm()
     return render(request, 'upload.html', {'form': form})
 
