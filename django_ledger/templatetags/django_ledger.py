@@ -181,7 +181,7 @@ def jes_table(context, next_url=None):
     entity_slug = context['view'].kwargs['entity_slug']
     ledger_pk = context['view'].kwargs['ledger_pk']
     if not next_url:
-        next_url = reverse('django_ledger:je-list',
+        next_url = reverse('ledger:je-list',
                            kwargs={
                                'entity_slug': entity_slug,
                                'ledger_pk': ledger_pk
@@ -495,14 +495,14 @@ def period_navigation(context, base_url: str):
     ctx['previous_year'] = context['previous_year']
 
     KWARGS['year'] = context['previous_year']
-    ctx['previous_year_url'] = reverse(f'django_ledger:{base_url}-year', kwargs=KWARGS)
+    ctx['previous_year_url'] = reverse(f'ledger:{base_url}-year', kwargs=KWARGS)
     ctx['next_year'] = context['next_year']
 
     KWARGS['year'] = context['next_year']
-    ctx['next_year_url'] = reverse(f'django_ledger:{base_url}-year', kwargs=KWARGS)
+    ctx['next_year_url'] = reverse(f'ledger:{base_url}-year', kwargs=KWARGS)
 
     KWARGS['year'] = context['year']
-    ctx['current_year_url'] = reverse(f'django_ledger:{base_url}-year', kwargs=KWARGS)
+    ctx['current_year_url'] = reverse(f'ledger:{base_url}-year', kwargs=KWARGS)
 
     dt = localdate()
     KWARGS_CURRENT_MONTH = {
@@ -517,7 +517,7 @@ def period_navigation(context, base_url: str):
     if 'ledger_pk' in KWARGS:
         KWARGS_CURRENT_MONTH['ledger_pk'] = KWARGS['ledger_pk']
 
-    ctx['current_month_url'] = reverse(f'django_ledger:{base_url}-month',
+    ctx['current_month_url'] = reverse(f'ledger:{base_url}-month',
                                        kwargs=KWARGS_CURRENT_MONTH)
 
     quarter_urls = list()
@@ -525,7 +525,7 @@ def period_navigation(context, base_url: str):
     for Q in range(1, 5):
         KWARGS['quarter'] = Q
         quarter_urls.append({
-            'url': reverse(f'django_ledger:{base_url}-quarter', kwargs=KWARGS),
+            'url': reverse(f'ledger:{base_url}-quarter', kwargs=KWARGS),
             'quarter': Q,
             'quarter_name': f'Q{Q}'
         })
@@ -537,7 +537,7 @@ def period_navigation(context, base_url: str):
     for M in range(1, 13):
         KWARGS['month'] = M
         month_urls.append({
-            'url': reverse(f'django_ledger:{base_url}-month', kwargs=KWARGS),
+            'url': reverse(f'ledger:{base_url}-month', kwargs=KWARGS),
             'month': M,
             'month_abbr': month_abbr[M]
         })
@@ -563,80 +563,7 @@ def navigation_menu(context, style):
             {
                 'type': 'link',
                 'title': 'Entity Dashboard',
-                'url': reverse('django_ledger:entity-dashboard', kwargs={'entity_slug': ENTITY_SLUG})
-            },
-            {
-                'type': 'links',
-                'title': 'Management',
-                'links': [
-                    {
-                        'type': 'link',
-                        'title': 'Vendors',
-                        'url': reverse('django_ledger:vendor-list', kwargs={'entity_slug': ENTITY_SLUG})
-                    },
-                    {
-                        'type': 'link',
-                        'title': 'Customers',
-                        'url': reverse('django_ledger:customer-list', kwargs={'entity_slug': ENTITY_SLUG})
-                    },
-                    {
-                        'type': 'link',
-                        'title': 'Bank Accounts',
-                        'url': reverse('django_ledger:bank-account-list', kwargs={'entity_slug': ENTITY_SLUG})
-                    },
-                    {
-                        'type': 'link',
-                        'title': 'Bills',
-                        'url': reverse('django_ledger:bill-list', kwargs={'entity_slug': ENTITY_SLUG})
-                    },
-                    {
-                        'type': 'link',
-                        'title': 'Invoices',
-                        'url': reverse('django_ledger:invoice-list', kwargs={'entity_slug': ENTITY_SLUG})
-                    },
-                    {
-                        'type': 'link',
-                        'title': 'Purchase Orders',
-                        'url': reverse('django_ledger:po-list', kwargs={'entity_slug': ENTITY_SLUG})
-                    },
-                    {
-                        'type': 'link',
-                        'title': 'Inventory',
-                        'url': reverse('django_ledger:inventory-list', kwargs={'entity_slug': ENTITY_SLUG})
-                    }
-
-                ]
-            },
-            {
-                'type': 'links',
-                'title': 'Your Lists',
-                'links': [
-                    {
-                        'type': 'link',
-                        'title': 'Entity Units',
-                        'url': reverse('django_ledger:unit-list', kwargs={'entity_slug': ENTITY_SLUG})
-                    },
-                    {
-                        'type': 'link',
-                        'title': 'My Products & Services',
-                        'url': reverse('django_ledger:product-list', kwargs={'entity_slug': ENTITY_SLUG})
-                    },
-                    {
-                        'type': 'link',
-                        'title': 'Things I Pay For',
-                        'url': reverse('django_ledger:expense-list', kwargs={'entity_slug': ENTITY_SLUG})
-                    },
-                    {
-                        'type': 'link',
-                        'title': 'Inventory Items',
-                        'url': reverse('django_ledger:inventory-item-list', kwargs={'entity_slug': ENTITY_SLUG})
-                    },
-                    {
-                        'type': 'link',
-                        'title': 'Unit of Measures',
-                        'url': reverse('django_ledger:uom-list', kwargs={'entity_slug': ENTITY_SLUG})
-                    },
-                ]
+                'url': reverse('ledger:entity-dashboard', kwargs={'entity_slug': ENTITY_SLUG})
             },
             {
                 'type': 'links',
@@ -645,17 +572,17 @@ def navigation_menu(context, style):
                     {
                         'type': 'link',
                         'title': 'Balance Sheet',
-                        'url': reverse('django_ledger:entity-bs', kwargs={'entity_slug': ENTITY_SLUG})
+                        'url': reverse('ledger:entity-bs', kwargs={'entity_slug': ENTITY_SLUG})
                     },
                     {
                         'type': 'link',
                         'title': 'Income Statement',
-                        'url': reverse('django_ledger:entity-ic', kwargs={'entity_slug': ENTITY_SLUG})
+                        'url': reverse('ledger:entity-ic', kwargs={'entity_slug': ENTITY_SLUG})
                     },
                     {
                         'type': 'link',
                         'title': 'Cash Flow Statement',
-                        'url': reverse('django_ledger:entity-cf', kwargs={'entity_slug': ENTITY_SLUG})
+                        'url': reverse('ledger:entity-cf', kwargs={'entity_slug': ENTITY_SLUG})
                     }
                 ]
             },
@@ -666,17 +593,17 @@ def navigation_menu(context, style):
                     {
                         'type': 'link',
                         'title': 'Chart of Accounts',
-                        'url': reverse('django_ledger:account-list', kwargs={'entity_slug': ENTITY_SLUG})
+                        'url': reverse('ledger:account-list', kwargs={'entity_slug': ENTITY_SLUG})
                     },
                     {
                         'type': 'link',
                         'title': 'Ledgers',
-                        'url': reverse('django_ledger:ledger-list', kwargs={'entity_slug': ENTITY_SLUG})
+                        'url': reverse('ledger:ledger-list', kwargs={'entity_slug': ENTITY_SLUG})
                     },
                     {
                         'type': 'link',
                         'title': 'Data Import',
-                        'url': reverse('django_ledger:data-import-jobs-list', kwargs={'entity_slug': ENTITY_SLUG})
+                        'url': reverse('ledger:data-import-jobs-list', kwargs={'entity_slug': ENTITY_SLUG})
                     }
                 ]
             },
@@ -687,12 +614,12 @@ def navigation_menu(context, style):
                     {
                         'type': 'link',
                         'title': 'My Entities',
-                        'url': reverse('django_ledger:home')
+                        'url': reverse('ledger:home')
                     },
                     {
                         'type': 'link',
                         'title': 'Entity Settings',
-                        'url': reverse('django_ledger:entity-update', kwargs={'entity_slug': ENTITY_SLUG})
+                        'url': reverse('ledger:entity-update', kwargs={'entity_slug': ENTITY_SLUG})
                     }
                 ]
             }

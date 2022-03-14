@@ -12,18 +12,21 @@
             <div class="columns">
                 {% if not hide_menu %}
                     <div class="column is-3 is-hidden-mobile is-hidden-tablet-only">
-                        <div class="columns is-multiline">
-                            <a class="column is-12" href=" {% url 'upload-plugin' %}"><h2>Upload Plugin</h2></a>
-                            <a class="column is-12" href="{% url 'all-plugins' %}"><h2>All Plugins</h2></a>
-                            {% for plugin in plugins %}
-                                {% if plugin.active %}
-                                    <a class="column is-12" href="{{ plugin.getEntryPoint }} "><h2>{{ plugin.name }}</h2></a>
-                                {% endif %}
-                            {% endfor %}
+                        <div style="border-radius: 2rem; border: 1px solid #6E8192;" class="pb-5 pl-5 pt-5">
+                            <div class="columns is-multiline">
+                                <a class="column is-12" href=" {% url 'upload-plugin' %}"><h2>Upload Plugin</h2></a>
+                                <a class="column is-12" href="{% url 'all-plugins' %}"><h2>All Plugins</h2></a>
+                                {% for plugin in plugins %}
+                                    {% if plugin.active %}
+                                        <a class="column is-12" href="{{ plugin.getEntryPoint }} ">
+                                            <h2>{{ plugin.name }}</h2></a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 {% endif %}
-                <div class="columns">
+                <div class="columns is-multiline">
                     {% for entity in entities %}
                         <div class="column is-6-tablet">
                             {% include 'django_ledger/includes/card_entity.html' with entity=entity %}

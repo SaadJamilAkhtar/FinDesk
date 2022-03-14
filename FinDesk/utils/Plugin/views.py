@@ -2,6 +2,8 @@ import json
 import os
 
 from django.shortcuts import render, redirect
+from django.urls import reverse
+
 from FinDesk.settings import load_plugin, unload_plugin
 from .forms import *
 import zipfile
@@ -35,6 +37,7 @@ def upload(request):
                     print(plugin.getEntryPoint())
                     installPythonDeps(config)
                     load_plugin(plugin.filename.replace("/", ""))
+                    return redirect(reverse('ledger:home'))
 
     form = PluginForm()
     return render(request, 'upload.html', {'form': form})
@@ -63,6 +66,7 @@ def toggleEnable(request, id):
                 else:
                     name = f'{settings.PLUGIN_DIRECTORY}.' + plugin.filename.replace("/", "")
                     unload_plugin(name)
+                return redirect(reverse('ledger:home'))
 
     data = {
         'form': EnableForm(instance=plugin)
