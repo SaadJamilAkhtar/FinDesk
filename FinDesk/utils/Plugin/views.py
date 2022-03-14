@@ -32,6 +32,7 @@ def upload(request):
                     plugin.version = config['version']
                     plugin.entry = config['entry']
                     plugin.save()
+                    print(plugin.getEntryPoint())
                     installPythonDeps(config)
                     load_plugin(plugin.filename.replace("/", ""))
 

@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
-    'ledger',
+    'django_ledger',
     'FinDesk.utils.Plugin'
 
 ]

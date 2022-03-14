@@ -12,7 +12,7 @@ class Plugin(models.Model):
     entry = models.CharField(max_length=255, null=True, blank=True)
 
     def getEntryPoint(self):
-        return self.filename + self.entry
+        return "/" + self.filename + self.entry
 
     def __str__(self):
         if self.name:
