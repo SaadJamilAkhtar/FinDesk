@@ -10,6 +10,42 @@ import zipfile
 from django.conf import settings
 from .utils import *
 
+from django.utils.translation import gettext as _
+from django.views.generic import RedirectView, ListView
+
+from django_ledger.models.entity import EntityModel
+from django_ledger.views.mixins import LoginRequiredMixIn
+from FinDesk.utils.Plugin.models import *
+
+
+def allPlugins_(request):
+    data = {
+        'plugins': Plugin.objects.all()
+    }
+    return render(request, 'allPlugins.html', data)
+
+
+class allPlugins(LoginRequiredMixIn, ListView):
+    template_name = 'allPlugins.html'
+    PAGE_TITLE = _('All Plugins')
+    context_object_name = 'entities'
+    extra_context = {
+        'page_title': PAGE_TITLE,
+        'header_title': PAGE_TITLE,
+    }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['header_subtitle'] = self.request.user.get_full_name()
+        context['header_subtitle_icon'] = 'ei:user'
+        context['plugins'] = Plugin.objects.all()
+        return context
+
+    def get_queryset(self):
+        return EntityModel.objects.for_user(
+            user_model=self.request.user
+        )
+
 
 def index(request):
     if request.POST:
@@ -42,12 +78,6 @@ def upload(request):
     form = PluginForm()
     return render(request, 'upload.html', {'form': form})
 
-
-def allPlugins(request):
-    data = {
-        'plugins': Plugin.objects.all()
-    }
-    return render(request, 'allPlugins.html', data)
 
 
 def toggleEnable(request, id):
