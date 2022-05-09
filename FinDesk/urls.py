@@ -27,7 +27,7 @@ urlpatterns = [
     path('', include('django_ledger.urls', namespace='ledger')),
     path('upload', upload, name='upload-plugin'),
     path('all/', allPlugins.as_view(), name='all-plugins'),
-    path('plugin/<int:id>', toggleEnable, name='toggle'),
+    path('plugin/<int:id>', toggleEnable.as_view(), name='toggle'),
 ]
 
 

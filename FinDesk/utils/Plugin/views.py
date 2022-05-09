@@ -70,7 +70,6 @@ def upload(request):
                     plugin.version = config['version']
                     plugin.entry = config['entry']
                     plugin.save()
-                    print(plugin.getEntryPoint())
                     installPythonDeps(config)
                     load_plugin(plugin.filename.replace("/", ""))
                     return redirect(reverse('ledger:home'))
@@ -79,8 +78,7 @@ def upload(request):
     return render(request, 'upload.html', {'form': form})
 
 
-
-def toggleEnable(request, id):
+def toggleEnable_(request, id):
     plugin = Plugin.objects.filter(id=id)
     if not plugin.count() > 0:
         return redirect('upload/')
@@ -102,3 +100,30 @@ def toggleEnable(request, id):
         'form': EnableForm(instance=plugin)
     }
     return render(request, 'enableForm.html', data)
+
+
+class toggleEnable(LoginRequiredMixIn, ListView):
+    template_name = 'enableForm.html'
+    PAGE_TITLE = _('Enable/Disable Plugins')
+    context_object_name = 'entities'
+    extra_context = {
+        'page_title': PAGE_TITLE,
+        'header_title': PAGE_TITLE,
+    }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['header_subtitle'] = self.request.user.get_full_name()
+        context['header_subtitle_icon'] = 'ei:user'
+        context['plugins'] = Plugin.objects.all()
+        plugin = Plugin.objects.filter(id=self.kwargs.get('id'))
+        if not plugin.count() > 0:
+            return redirect('upload/')
+        plugin = plugin.first()
+        context['form'] = EnableForm(instance=plugin)
+        return context
+
+    def get_queryset(self):
+        return EntityModel.objects.for_user(
+            user_model=self.request.user
+        )
