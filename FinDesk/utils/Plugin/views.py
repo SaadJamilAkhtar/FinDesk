@@ -121,9 +121,27 @@ class toggleEnable(LoginRequiredMixIn, ListView):
             return redirect('upload/')
         plugin = plugin.first()
         context['form'] = EnableForm(instance=plugin)
+        context['plugin'] = plugin
         return context
 
     def get_queryset(self):
         return EntityModel.objects.for_user(
             user_model=self.request.user
         )
+
+    def post(self, request, *args, **kwargs):
+        plugin = Plugin.objects.filter(id=self.kwargs.get('id'))
+        if not plugin.count() > 0:
+            return redirect('upload/')
+        plugin = plugin.first()
+        form = EnableForm(request.POST, instance=plugin)
+        if form.is_valid():
+            form.save()
+            toggle = form.cleaned_data.get('active')
+            if not toggle is None:
+                if toggle:
+                    load_plugin(plugin.filename.replace("/", ""))
+                else:
+                    name = f'{settings.PLUGIN_DIRECTORY}.' + plugin.filename.replace("/", "")
+                    unload_plugin(name)
+                return redirect(reverse('ledger:home'))

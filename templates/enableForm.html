@@ -28,11 +28,15 @@
                 {% endif %}
                 <div class="columns is-multiline">
                     <div class="column is-6-tablet">
-                        <form method="post">
-                            {% csrf_token %}
-                            {{ form }}
-                            <button type="submit">Submit</button>
-                        </form>
+                        <div style="padding: 1.5rem">
+                            <h1 style="font-size: 2rem; padding-bottom: 1rem">{{ plugin.name }}</h1>
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ form }}
+                                <button type="submit" style="padding: 0.5rem 2rem 0.5rem 2rem; margin-top: 2rem;
+                                 border-radius: 2rem; background: white">Update</button>
+                            </form>
+                        </div>
                     </div>
 
                 </div>
