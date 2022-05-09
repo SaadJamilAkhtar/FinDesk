@@ -14,6 +14,7 @@
                     <div class="column is-3 is-hidden-mobile is-hidden-tablet-only">
                         <div style="border-radius: 2rem; border: 1px solid #6E8192;" class="pb-5 pl-5 pt-5">
                             <div class="columns is-multiline">
+                                <a class="column is-12" href=" {% url 'ledger:home' %}"><h2>Home</h2></a>
                                 <a class="column is-12" href=" {% url 'upload-plugin' %}"><h2>Upload Plugin</h2></a>
                                 <a class="column is-12" href="{% url 'all-plugins' %}"><h2>All Plugins</h2></a>
                                 {% for plugin in plugins %}
