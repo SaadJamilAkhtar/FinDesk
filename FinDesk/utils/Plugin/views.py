@@ -104,6 +104,7 @@ class upload(LoginRequiredMixIn, ListView):
 
     def post(self, request, *args, **kwargs):
         form = PluginForm(request.POST, request.FILES)
+        print(request.FILES)
         if form.is_valid():
             if checkPlugin(form):
                 plugin = form.save()
@@ -120,6 +121,7 @@ class upload(LoginRequiredMixIn, ListView):
                     installPythonDeps(config)
                     load_plugin(plugin.filename.replace("/", ""))
                     return redirect(reverse('ledger:home'))
+        return self.get(request, args, kwargs)
 
 
 # function based view of toggle enable

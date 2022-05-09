@@ -29,7 +29,7 @@
                 <div class="columns is-multiline">
                     <div class="column is-6-tablet">
                         <div style="padding: 1.5rem">
-                            <form method="post">
+                            <form method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 {{ form }}
                                 <button type="submit" style="padding: 0.5rem 2rem 0.5rem 2rem; margin-top: 2rem;
