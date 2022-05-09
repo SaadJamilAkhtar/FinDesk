@@ -18,11 +18,13 @@ from django_ledger.views.mixins import LoginRequiredMixIn
 from FinDesk.utils.Plugin.models import *
 
 
-def allPlugins_(request):
-    data = {
-        'plugins': Plugin.objects.all()
-    }
-    return render(request, 'allPlugins.html', data)
+# function based view of all plugins
+
+# def allPlugins_(request):
+#     data = {
+#         'plugins': Plugin.objects.all()
+#     }
+#     return render(request, 'allPlugins.html', data)
 
 
 class allPlugins(LoginRequiredMixIn, ListView):
@@ -78,28 +80,30 @@ def upload(request):
     return render(request, 'upload.html', {'form': form})
 
 
-def toggleEnable_(request, id):
-    plugin = Plugin.objects.filter(id=id)
-    if not plugin.count() > 0:
-        return redirect('upload/')
-    plugin = plugin.first()
-    if request.POST:
-        form = EnableForm(request.POST, instance=plugin)
-        if form.is_valid():
-            form.save()
-            toggle = form.cleaned_data.get('active')
-            if not toggle is None:
-                if toggle:
-                    load_plugin(plugin.filename.replace("/", ""))
-                else:
-                    name = f'{settings.PLUGIN_DIRECTORY}.' + plugin.filename.replace("/", "")
-                    unload_plugin(name)
-                return redirect(reverse('ledger:home'))
+# function based view of toggle enable
 
-    data = {
-        'form': EnableForm(instance=plugin)
-    }
-    return render(request, 'enableForm.html', data)
+# def toggleEnable_(request, id):
+#     plugin = Plugin.objects.filter(id=id)
+#     if not plugin.count() > 0:
+#         return redirect('upload/')
+#     plugin = plugin.first()
+#     if request.POST:
+#         form = EnableForm(request.POST, instance=plugin)
+#         if form.is_valid():
+#             form.save()
+#             toggle = form.cleaned_data.get('active')
+#             if not toggle is None:
+#                 if toggle:
+#                     load_plugin(plugin.filename.replace("/", ""))
+#                 else:
+#                     name = f'{settings.PLUGIN_DIRECTORY}.' + plugin.filename.replace("/", "")
+#                     unload_plugin(name)
+#                 return redirect(reverse('ledger:home'))
+#
+#     data = {
+#         'form': EnableForm(instance=plugin)
+#     }
+#     return render(request, 'enableForm.html', data)
 
 
 class toggleEnable(LoginRequiredMixIn, ListView):
