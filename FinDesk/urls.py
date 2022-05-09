@@ -25,7 +25,7 @@ from FinDesk.settings import plugin_loaded, plugin_unloaded
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('django_ledger.urls', namespace='ledger')),
-    path('upload', upload, name='upload-plugin'),
+    path('upload', upload.as_view(), name='upload-plugin'),
     path('all/', allPlugins.as_view(), name='all-plugins'),
     path('plugin/<int:id>', toggleEnable.as_view(), name='toggle'),
 ]

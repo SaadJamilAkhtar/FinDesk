@@ -56,8 +56,53 @@ def index(request):
     return render(request, 'index.html')
 
 
-def upload(request):
-    if request.POST:
+# def upload_(request):
+#     if request.POST:
+#         form = PluginForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             if checkPlugin(form):
+#                 plugin = form.save()
+#                 with zipfile.ZipFile(plugin.file, 'r') as zip_ref:
+#                     filenames = zip_ref.namelist()
+#                     zip_ref.extractall(f'{settings.PLUGIN_DIRECTORY}/')
+#                     plugin.filename = filenames[0]
+#                     config = json.load(open(f'{settings.PLUGIN_DIRECTORY}/{plugin.filename}config.json', 'r'))
+#                     plugin.name = config['name']
+#                     plugin.author = config['author']
+#                     plugin.version = config['version']
+#                     plugin.entry = config['entry']
+#                     plugin.save()
+#                     installPythonDeps(config)
+#                     load_plugin(plugin.filename.replace("/", ""))
+#                     return redirect(reverse('ledger:home'))
+#
+#     form = PluginForm()
+#     return render(request, 'upload.html', {'form': form})
+
+
+class upload(LoginRequiredMixIn, ListView):
+    template_name = 'upload.html'
+    PAGE_TITLE = _('Upload Plugins')
+    context_object_name = 'entities'
+    extra_context = {
+        'page_title': PAGE_TITLE,
+        'header_title': PAGE_TITLE,
+    }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['header_subtitle'] = self.request.user.get_full_name()
+        context['header_subtitle_icon'] = 'ei:user'
+        context['plugins'] = Plugin.objects.all()
+        context['form'] = PluginForm()
+        return context
+
+    def get_queryset(self):
+        return EntityModel.objects.for_user(
+            user_model=self.request.user
+        )
+
+    def post(self, request, *args, **kwargs):
         form = PluginForm(request.POST, request.FILES)
         if form.is_valid():
             if checkPlugin(form):
@@ -75,9 +120,6 @@ def upload(request):
                     installPythonDeps(config)
                     load_plugin(plugin.filename.replace("/", ""))
                     return redirect(reverse('ledger:home'))
-
-    form = PluginForm()
-    return render(request, 'upload.html', {'form': form})
 
 
 # function based view of toggle enable
