@@ -16,7 +16,6 @@ import django.dispatch
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Plugin Architecture signals
 plugin_loaded = django.dispatch.Signal()
 plugin_unloaded = django.dispatch.Signal()
@@ -59,7 +58,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'django_ledger',
-    'FinDesk.utils.Plugin'
+    'FinDesk.utils.Plugin',
+    'rest_framework'
 
 ]
 
