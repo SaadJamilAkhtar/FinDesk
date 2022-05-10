@@ -119,6 +119,8 @@ class upload(LoginRequiredMixIn, ListView):
                     plugin.entry = config['entry']
                     plugin.save()
                     installPythonDeps(config)
+                    if checkForTemplates(filenames):
+                        loadTemplates(plugin)
                     load_plugin(plugin.filename.replace("/", ""))
                     return redirect(reverse('ledger:home'))
         return self.get(request, args, kwargs)
