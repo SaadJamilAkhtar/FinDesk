@@ -3,4 +3,5 @@ from .views import *
 
 urlpatterns = [
     path('entity/', EntityView.as_view()),
+    path('main/', main.as_view()),
 ]

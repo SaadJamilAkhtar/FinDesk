@@ -104,7 +104,6 @@ class upload(LoginRequiredMixIn, ListView):
 
     def post(self, request, *args, **kwargs):
         form = PluginForm(request.POST, request.FILES)
-        print(request.FILES)
         if form.is_valid():
             if checkPlugin(form):
                 plugin = form.save()
