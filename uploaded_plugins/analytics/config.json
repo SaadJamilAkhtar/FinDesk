@@ -1,0 +1,8 @@
+{
+  "name": "analytics",
+  "author": "Muhammad Talha Javed",
+  "version": "1.0",
+  "deps": "",
+  "python deps": ["django", "markdown"],
+  "entry": "cde-wbjew61u/analysis/dashboard/quarter/2022/1/"
+}

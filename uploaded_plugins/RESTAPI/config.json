@@ -1,0 +1,8 @@
+{
+  "name": "RESTAPI",
+  "author": "Muhammad Saad Jamil",
+  "version": "1.0",
+  "deps": "",
+  "python deps": ["django", "djangorestframework", "markdown"],
+  "entry": "main/"
+}
