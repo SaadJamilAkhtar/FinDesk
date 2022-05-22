@@ -550,6 +550,85 @@ def period_navigation(context, base_url: str):
 
     return ctx
 
+@register.inclusion_tag('django_ledger/tags/period_navigator.html', takes_context=True)
+def period_navigation_analytics(context, base_url: str):
+    KWARGS = dict()
+    entity_slug = context['view'].kwargs['entity_slug']
+    KWARGS['entity_slug'] = entity_slug
+
+    if context['view'].kwargs.get('ledger_pk'):
+        KWARGS['ledger_pk'] = context['view'].kwargs.get('ledger_pk')
+
+    if context['view'].kwargs.get('account_pk'):
+        KWARGS['account_pk'] = context['view'].kwargs.get('account_pk')
+
+    if context['view'].kwargs.get('unit_slug'):
+        KWARGS['unit_slug'] = context['view'].kwargs.get('unit_slug')
+
+    ctx = dict()
+    ctx['year'] = context['year']
+    ctx['has_year'] = context.get('has_year')
+    ctx['has_quarter'] = context.get('has_quarter')
+    ctx['has_month'] = context.get('has_month')
+    ctx['has_date'] = context.get('has_date')
+    ctx['previous_year'] = context['previous_year']
+
+    KWARGS['year'] = context['previous_year']
+    ctx['previous_year_url'] = reverse(f'{base_url}-year', kwargs=KWARGS)
+    ctx['next_year'] = context['next_year']
+
+    KWARGS['year'] = context['next_year']
+    ctx['next_year_url'] = reverse(f'{base_url}-year', kwargs=KWARGS)
+
+    KWARGS['year'] = context['year']
+    ctx['current_year_url'] = reverse(f'{base_url}-year', kwargs=KWARGS)
+
+    dt = localdate()
+    KWARGS_CURRENT_MONTH = {
+        'entity_slug': context['view'].kwargs['entity_slug'],
+        'year': dt.year,
+        'month': dt.month
+    }
+    if 'unit_slug' in KWARGS:
+        KWARGS_CURRENT_MONTH['unit_slug'] = KWARGS['unit_slug']
+    if 'account_pk' in KWARGS:
+        KWARGS_CURRENT_MONTH['account_pk'] = KWARGS['account_pk']
+    if 'ledger_pk' in KWARGS:
+        KWARGS_CURRENT_MONTH['ledger_pk'] = KWARGS['ledger_pk']
+
+    ctx['current_month_url'] = reverse(f'{base_url}-month',
+                                       kwargs=KWARGS_CURRENT_MONTH)
+
+    quarter_urls = list()
+    ctx['quarter'] = context.get('quarter')
+    for Q in range(1, 5):
+        KWARGS['quarter'] = Q
+        quarter_urls.append({
+            'url': reverse(f'{base_url}-quarter', kwargs=KWARGS),
+            'quarter': Q,
+            'quarter_name': f'Q{Q}'
+        })
+    del KWARGS['quarter']
+    ctx['quarter_urls'] = quarter_urls
+
+    month_urls = list()
+    ctx['month'] = context.get('month')
+    for M in range(1, 13):
+        KWARGS['month'] = M
+        month_urls.append({
+            'url': reverse(f'{base_url}-month', kwargs=KWARGS),
+            'month': M,
+            'month_abbr': month_abbr[M]
+        })
+    ctx['month_urls'] = month_urls
+    ctx['from_date'] = context['from_date']
+    ctx['to_date'] = context['to_date']
+    ctx.update(KWARGS)
+
+    ctx['date_navigation_url'] = context.get('date_navigation_url')
+
+    return ctx
+
 
 @register.inclusion_tag('django_ledger/tags/menu.html', takes_context=True)
 def navigation_menu(context, style):

@@ -34,10 +34,13 @@ urlpatterns = [
 @receiver(plugin_loaded)
 def load_urls(sender, **kwargs):
     try:
+        print("adding")
         urlpatterns.append(
-            path(str(sender).lower() + "/", include(settings.PLUGIN_DIRECTORY + "." + str(sender) + ".urls"),
-                 name=sender))
-    except:
+            path(str(sender).lower() + "/",
+                 include((settings.PLUGIN_DIRECTORY + "." + str(sender) + ".urls", sender), namespace=sender),
+                 ))
+    except Exception as e:
+        print(e)
         pass
 
 
@@ -47,6 +50,7 @@ def unload_urls(sender, **kwargs):
         print(f"{str(url.pattern)} : {(str(sender).lower() + '/')}")
         if str(url.pattern).strip() == (str(sender).lower() + "/"):
             urlpatterns.remove(url)
+
 
 try:
     mountPlugins()

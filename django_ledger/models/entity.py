@@ -215,6 +215,11 @@ class EntityModelAbstract(NodeTreeMixIn,
                        kwargs={
                            'entity_slug': self.slug
                        })
+    def get_anal_dashboard_url(self):
+        return reverse('entity-dashboard-analysis',
+                       kwargs={
+                           'entity_slug': self.slug
+                       })
 
     def get_manage_url(self):
         return reverse('django_ledger:entity-update',
