@@ -13,3 +13,4 @@ ___
 - To Learn More About FinDesk's Plugin Development checkout FinDesk Developer Docs [Here](https://github.com/SaadJamilAkhtar/FinDesk-Docs)  
 - For Sample Files on FinDesk plugins visit [here](https://github.com/SaadJamilAkhtar/FinDesk-Plugin-Sample-Files)
 - For Sample Plugins visit [here](https://github.com/SaadJamilAkhtar/Findesk-Sample-plugin)
+- For more details on FinDesk platform Development Check out this development [repo](https://github.com/SaadJamilAkhtar/django-plugin-test)
